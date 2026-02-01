@@ -1,7 +1,8 @@
 from zai import ZhipuAiClient
 import os 
 from typing import Tuple 
-from utils.llm.data_model import LLM_VENDOR_CLASS
+from utils.llm.data_model import LLM_VENDOR_CLASS,LLMClientRegistry
+
 
 def zhupu_client(user_input: str):
     api_key = os.getenv("API_KEY")
@@ -30,23 +31,30 @@ class Chat:
                 llm_vendor: str,
                 api_key:str) -> None:
         self.history = []
-        self.pre_ready_llm_client(llm_vendor)
         self.api_key = api_key 
+        self.registry = LLMClientRegistry()
+        self.pre_ready_llm_client(llm_vendor)
+
 
     def pre_ready_llm_client(self,llm_vendor):
         # self.llm_client = llm_client(api_key)
         valid_llm = LLM_VENDOR_CLASS.is_valid_vendor(llm_vendor)
-         
+        if valid_llm:
+            # 2. 配置API密钥 
+            # self.registry.set_api_key(valid_llm, self.api_key)
+            # self.client = self.registry.create_client(llm_vendor)
+            self.registry.set_api_key(llm_vendor,self.api_key)
+            self.client = self.registry.create_client_with_stored_key(llm_vendor)
 
     
-    async def accompletions(self, user_query: str):
+    def accompletions(self, user_query: str):
         this_time_query = [{"role":"user","content":user_query}]
 
         if self.history:
             for dict_qeury in self.history:
                 this_time_query.index(0, dict_qeury)
 
-        response = await self.client.chat.completions.create(
+        response = self.client.chat.completions.create(
         model="glm-4.7",
         messages=this_time_query,
         thinking={

@@ -1,6 +1,4 @@
-def main():
-    print("Hello from your-first-financial-assistant!")
+from src.core.service import main_chat
 
-
-if __name__ == "__main__":
-    main()
+if __name__ =="__main__":
+    main_chat()

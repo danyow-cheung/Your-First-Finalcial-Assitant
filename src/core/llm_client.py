@@ -1,7 +1,7 @@
 from zai import ZhipuAiClient
 import os 
 from typing import Tuple 
-from utils.llm.data_model import LLM_VENDOR_CLASS,LLMClientRegistry
+from src.utils.llm.data_model import LLM_VENDOR_CLASS,LLMClientRegistry
 
 
 def zhupu_client(user_input: str):
@@ -65,7 +65,7 @@ class Chat:
     )
 
         # Get complete response
-        print("[Response from LLM]=",response.choices[0].message)
+        # print("[Response from LLM]=",response.choices[0].message)
         return response.choices[0].message
 
 
